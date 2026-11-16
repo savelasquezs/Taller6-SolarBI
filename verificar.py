@@ -52,6 +52,10 @@ def verificar(alertas=False):
             respuesta=api(config,'/api/ds/query',{'from':str(int((time.time()-3600)*1000)),
                 'to':str(int(time.time()*1000)),'queries':[consulta]})
             assert not respuesta['results']['A'].get('error'),(panel['title'],respuesta)
+            if panel['id']==14:
+                valores=respuesta['results']['A']['frames'][0]['data']['values']
+                assert valores[0]==[str(r[0]) for r in resultado['totales']]
+                assert all(abs(solar-r[4])<=.005001 for solar,r in zip(valores[1],resultado['totales']))
             consultas+=1
     resultado['consultas_grafana']=consultas
     reglas=api(config,'/api/prometheus/grafana/api/v1/rules')
