@@ -464,14 +464,14 @@
             "lineageTag": "1037f34a-3d2a-4261-b7f2-0b377e6dff40"
           },
           {
-            "name": "Lecturas",
+            "name": "Lecturas recibidas",
             "expression": "SUM(FactEnergia[lecturas])",
             "formatString": "#,0.00",
             "lineageTag": "bfcd75a2-5360-4173-9035-9a1e9e39823b"
           },
           {
             "name": "Lecturas válidas %",
-            "expression": "DIVIDE(SUM(FactEnergia[lecturas_validas]),[Lecturas])",
+            "expression": "DIVIDE(SUM(FactEnergia[lecturas_validas]),[Lecturas recibidas])",
             "formatString": "0.0%",
             "lineageTag": "d547b715-c833-45aa-ae09-e20097d21c3d"
           },

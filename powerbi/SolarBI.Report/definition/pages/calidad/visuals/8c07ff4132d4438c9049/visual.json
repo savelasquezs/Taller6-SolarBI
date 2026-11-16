@@ -122,11 +122,11 @@
                       "Entity": "FactEnergia"
                     }
                   },
-                  "Property": "Lecturas"
+                  "Property": "Lecturas recibidas"
                 }
               },
-              "queryRef": "FactEnergia.Lecturas",
-              "nativeQueryRef": "Lecturas"
+              "queryRef": "FactEnergia.Lecturas recibidas",
+              "nativeQueryRef": "Lecturas recibidas"
             },
             {
               "field": {
