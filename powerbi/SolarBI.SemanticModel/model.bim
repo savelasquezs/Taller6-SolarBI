@@ -621,16 +621,23 @@
           },
           {
             "name": "Días incompletos",
+            "description": "Dias con cobertura solar inferior al 100 %, con tolerancia numerica de 0,000001 puntos porcentuales.",
             "expression": "COUNTROWS(FILTER(SUMMARIZE(FactEnergia,DimFecha[fecha],DimInversor[inversor]),CALCULATE([Cobertura solar %])<1-0.00000001))",
             "formatString": "#,0.00",
-            "lineageTag": "0d619d98-a328-4ec0-90b9-b1a45672984c",
-            "description": "Dias con cobertura solar inferior al 100 %, con tolerancia numerica de 0,000001 puntos porcentuales."
+            "lineageTag": "0d619d98-a328-4ec0-90b9-b1a45672984c"
           },
           {
             "name": "Cobertura solar %",
             "expression": "DIVIDE(SUM(FactEnergia[solar_s]),COUNTROWS(FactEnergia)*300)",
             "formatString": "0.0%",
             "lineageTag": "bc53952e-4b6d-4014-990a-369950da6781"
+          },
+          {
+            "name": "Lecturas con campos inválidos",
+            "description": "Lecturas recibidas con al menos un campo requerido no válido; se conservan sus otros campos utilizables.",
+            "expression": "[Lecturas recibidas]-SUM(FactEnergia[lecturas_validas])",
+            "formatString": "#,0",
+            "lineageTag": "3bff7746-bcfc-4436-8857-0497a49aa4af"
           }
         ],
         "partitions": [
