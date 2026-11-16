@@ -23,8 +23,13 @@ def preparar_configuracion():
 def dsn():
     import winreg
     config=entorno()
-    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\ODBC\ODBCINST.INI\PostgreSQL Unicode(x64)') as clave:
-        driver=winreg.QueryValueEx(clave,'Driver')[0]
+    try:
+        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\ODBC\ODBCINST.INI\PostgreSQL Unicode(x64)') as clave:
+            driver=winreg.QueryValueEx(clave,'Driver')[0]
+    except FileNotFoundError:
+        driver=config.get('ODBC_DRIVER_PATH',str(Path(config['DATA_DIR'])/'herramientas/odbc/podbc35w.dll'))
+        if not Path(driver).is_file():
+            raise SystemExit('Instale PostgreSQL ODBC Unicode x64 o configure ODBC_DRIVER_PATH en .env.')
     valores={'Driver':driver,'Servername':'127.0.0.1','Port':config.get('DB_PORT','55441'),
              'Database':'solarbi','Username':'solarbi_bi','Password':config['BI_PASSWORD'],
              'SSLmode':'disable','ReadOnly':'1'}

@@ -8,7 +8,7 @@ groups:
   - uid: soc-bajo
     title: 'DEMO: SoC bajo'
     condition: C
-    for: 30s
+    for: ${SOC_ALERT_SECONDS}s
     noDataState: OK
     execErrState: Error
     annotations:
@@ -78,7 +78,7 @@ groups:
           type: grafana-postgresql-datasource
           uid: solarbi-pg
         format: table
-        rawSql: SELECT coalesce(extract(epoch FROM now()-u.emitido),999) AS value,i.inversor::text
+        rawSql: SELECT coalesce(extract(epoch FROM now()-u.emitido),999)-${STALE_SECONDS} AS value,i.inversor::text
           AS inversor FROM gold.dim_inversor i LEFT JOIN demo.ultima u USING(inversor)
           WHERE i.inversor>0
         editorMode: code
@@ -95,7 +95,7 @@ groups:
         - evaluator:
             type: gt
             params:
-            - 45
+            - 0
           operator:
             type: and
           query:

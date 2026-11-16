@@ -44,6 +44,8 @@ services:
       GF_AUTH_ANONYMOUS_ENABLED: 'false'
       GF_ANALYTICS_REPORTING_ENABLED: 'false'
       BI_PASSWORD: ${BI_PASSWORD}
+      SOC_ALERT_SECONDS: ${SOC_ALERT_SECONDS:-30}
+      STALE_SECONDS: ${STALE_SECONDS:-45}
     ports:
       - '127.0.0.1:${GRAFANA_PORT:-3003}:3000'
     volumes:

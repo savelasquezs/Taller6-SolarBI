@@ -13,7 +13,7 @@ def reproducir():
     pausa=float(config.get('REPLAY_PAUSE_SECONDS',65))
     sesion=str(uuid4())
     secuencia=0
-    ultimo=-1.0
+    ultimos={1:-1.0,2:-1.0}
     while True:
         try:
             with psycopg.connect(conexion(config,'solarbi_sim')) as db:
@@ -22,17 +22,19 @@ def reproducir():
                     for inversor in (1,2):
                         fila=db.execute('''SELECT ts,inversor,solar_w,carga_w,red_w,bateria_w,soc
                             FROM silver.lecturas WHERE inversor=%s AND ts>%s AND valida
-                            ORDER BY ts LIMIT 1''',(inversor,ultimo)).fetchone()
+                            ORDER BY ts LIMIT 1''',(inversor,ultimos[inversor])).fetchone()
                         if fila:
                             filas.append(fila)
+                            ultimos[inversor]=fila[0]
+                        else:
+                            ultimos[inversor]=-1.0
                     if not filas:
-                        ultimo=-1.0
                         sesion=str(uuid4())
+                        time.sleep(intervalo)
                         continue
                     for fila in filas:
                         db.execute('''INSERT INTO demo.lecturas(sesion,ts_original,inversor,solar_w,carga_w,red_w,bateria_w,soc)
                             VALUES(%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING''',(sesion,*fila))
-                    ultimo=min(r[0] for r in filas)
                     db.execute("DELETE FROM demo.lecturas WHERE emitido<now()-interval '2 hours'")
                     db.commit()
                     secuencia+=1

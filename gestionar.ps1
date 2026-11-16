@@ -2,7 +2,7 @@ param([ValidateSet('up','down','compose','verificar','cliente')][string]$Accion=
 $ErrorActionPreference='Stop'
 Set-Location -LiteralPath $PSScriptRoot
 function Ejecutar {
-    param([string]$Programa,[string[]]$Argumentos)
+    param([string]$Programa,[Parameter(ValueFromRemainingArguments=$true)][string[]]$Argumentos)
     & $Programa @Argumentos
     if($LASTEXITCODE -ne 0) { throw "Falló $Programa (código $LASTEXITCODE)" }
 }
@@ -24,7 +24,7 @@ Ejecutar docker @('info','--format','{{.ServerVersion}}')
 $unidad=$config['DOCKER_STORAGE_DRIVE']
 if(-not $unidad) { $unidad='C' }
 if((Get-PSDrive $unidad).Free -lt 3GB) { throw "Docker necesita al menos 3 GB libres en $unidad`: antes de crear el clúster. No se borrará ningún dato." }
-if((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory -lt 4MB) { throw 'Se necesitan al menos 4 GB de RAM libre para el clúster y los tableros.' }
+if((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory*1KB -lt 4GB) { throw 'Se necesitan al menos 4 GB de RAM libre para el clúster y los tableros.' }
 Ejecutar python @('preparar_datos.py')
 if($Accion -eq 'compose') {
     Ejecutar docker @('compose','up','-d','--build')
@@ -60,7 +60,7 @@ $publicFile=Join-Path $config.DATA_DIR 'configuracion.env'
 $privadas=@('POSTGRES_PASSWORD','BI_PASSWORD','SIM_PASSWORD','GRAFANA_PASSWORD')
 ($privadas | ForEach-Object { "$_=$($config[$_])" }) | Set-Content -LiteralPath $secretFile -Encoding ascii
 $publicas=@('POSTGRES_DB=solarbi','POSTGRES_USER=solarbi','PGHOST=db','PGPORT=5432','DATA_DIR=/datos','OUTPUT_DIR=/salida')
-foreach($clave in @('MAX_GAP_SECONDS','SOC_THRESHOLD','REPLAY_SECONDS','REPLAY_PAUSE_AFTER','REPLAY_PAUSE_SECONDS','TARIFF_COP_KWH','PV_KWP')) { $publicas+="$clave=$($config[$clave])" }
+foreach($clave in @('MAX_GAP_SECONDS','SOC_THRESHOLD','SOC_ALERT_SECONDS','STALE_SECONDS','REPLAY_SECONDS','REPLAY_PAUSE_AFTER','REPLAY_PAUSE_SECONDS','TARIFF_COP_KWH','PV_KWP')) { $publicas+="$clave=$($config[$clave])" }
 $publicas | Set-Content -LiteralPath $publicFile -Encoding ascii
 kubectl --context kind-solarbi -n solarbi create secret generic solarbi-credenciales --from-env-file=$secretFile --dry-run=client -o yaml | kubectl --context kind-solarbi apply -f - | Out-Null
 if($LASTEXITCODE -ne 0) { throw 'No se pudo preparar Secret' }
