@@ -52,7 +52,7 @@ Los informes de inventario, checksums, reglas de calidad, conciliación y verifi
 
 ## Operación y Kubernetes
 
-Namespace `solarbi`; StatefulSet PostgreSQL y PVC; Deployment Grafana con PVC y provisioning; Job ETL; Deployment simulador; Services por nombre; ConfigMap para configuración y Secret para contraseñas. Los PV locales retienen archivos en D: a través de los mounts del nodo kind. No ofrecen alta disponibilidad ni almacenamiento distribuido.
+Namespace `solarbi`; StatefulSet PostgreSQL y PVC; Deployment Grafana con PVC y provisioning; Job ETL; Deployment simulador; Services por nombre; ConfigMap para configuración y Secret para contraseñas. Los PV locales retienen archivos en D: a través de los mounts del nodo kind. No ofrecen alta disponibilidad ni almacenamiento distribuido. El conector PostgreSQL de Grafana se fija en 13.0.7 y se desactivan complementos ajenos al taller. Las imágenes se exportan únicamente para `linux/amd64` y se cargan con `kind load image-archive`: esto evita capas ausentes de otras arquitecturas en el almacén containerd de Docker Desktop. El archivo se reutiliza mientras las imágenes no cambien.
 
 Grafana refresca cada 5 s. El simulador emite cada 10 s, conserva timestamp original y registra hora de emisión aparte. Tras seis emisiones pausa 65 s para demostrar la alerta de ausencia >45 s. La otra alerta detecta SoC <20 % durante 30 s. Son umbrales académicos; no instrucciones operativas de seguridad. Se aprovisionan al arrancar, sin mensajes externos.
 

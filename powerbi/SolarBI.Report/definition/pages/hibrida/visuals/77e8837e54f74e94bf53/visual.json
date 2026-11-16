@@ -4,9 +4,9 @@
   "position": {
     "x": 800,
     "y": 85,
-    "width": 365,
-    "height": 95,
     "z": 30,
+    "height": 95,
+    "width": 365,
     "tabOrder": 30
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimFecha.periodo",
-              "nativeQueryRef": "periodo"
+              "nativeQueryRef": "periodo",
+              "active": true
             }
           ]
         }

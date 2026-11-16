@@ -51,6 +51,7 @@ def inventariar(ruta):
             if nombre == 'context':
                 item['cobertura'] = db.execute('SELECT min(start),max(end),min(recorded),max(recorded) FROM context').fetchone()
             resultado[nombre] = item
+            print(f'Inventario {nombre}: {item["filas"]} filas', flush=True)
     return resultado
 
 
@@ -60,6 +61,8 @@ def preparar():
     informes = Path(config.get('OUTPUT_DIR', 'D:/Entregas/Taller6'))
     bronze.mkdir(parents=True, exist_ok=True)
     informes.mkdir(parents=True, exist_ok=True)
+    previo = informes / 'checksums.json'
+    anterior = json.loads(previo.read_text(encoding='utf-8-sig')) if previo.exists() else {}
     sumas = descargar('opencem-v1.0.0-SHA256SUMS.txt', bronze)
     esperados = {}
     for linea in sumas.read_text(encoding='utf-8').splitlines():
@@ -92,9 +95,14 @@ def preparar():
             raise ValueError('Checksum incorrecto de SQLite descomprimido')
         temporal.replace(sqlite)
     evidencia[sqlite.name] = {'sha256': original['sha256'], 'bytes': sqlite.stat().st_size}
+    print('SHA-256 verificado: '+sqlite.name, flush=True)
     (informes / 'checksums.json').write_text(json.dumps(evidencia, indent=2), encoding='utf-8')
-    inventario = inventariar(sqlite)
-    (informes / 'inventario.json').write_text(json.dumps(inventario, ensure_ascii=False, indent=2), encoding='utf-8')
+    archivo_inventario = informes / 'inventario.json'
+    if archivo_inventario.exists() and anterior.get(sqlite.name, {}).get('sha256') == original['sha256']:
+        inventario = json.loads(archivo_inventario.read_text(encoding='utf-8-sig'))
+    else:
+        inventario = inventariar(sqlite)
+        archivo_inventario.write_text(json.dumps(inventario, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps({n: v['filas'] for n, v in inventario.items()}), flush=True)
 
 

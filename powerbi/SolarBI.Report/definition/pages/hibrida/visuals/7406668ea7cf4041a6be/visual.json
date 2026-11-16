@@ -4,9 +4,9 @@
   "position": {
     "x": 30,
     "y": 85,
-    "width": 365,
-    "height": 95,
     "z": 10,
+    "height": 95,
+    "width": 365,
     "tabOrder": 10
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimInversor.nombre",
-              "nativeQueryRef": "nombre"
+              "nativeQueryRef": "nombre",
+              "active": true
             }
           ]
         }

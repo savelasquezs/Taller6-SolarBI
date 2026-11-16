@@ -16,7 +16,7 @@ def api(config,ruta,contenido=None):
     solicitud=urllib.request.Request('http://127.0.0.1:'+config.get('GRAFANA_PORT','3003')+ruta,
         headers={'Authorization':'Basic '+auth,'Content-Type':'application/json'},
         data=None if contenido is None else json.dumps(contenido).encode())
-    with urllib.request.urlopen(solicitud,timeout=30) as respuesta:
+    with urllib.request.urlopen(solicitud,timeout=120) as respuesta:
         return json.load(respuesta)
 
 

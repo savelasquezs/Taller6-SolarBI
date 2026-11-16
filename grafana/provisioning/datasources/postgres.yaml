@@ -15,3 +15,5 @@ datasources:
     sslmode: disable
     postgresVersion: 1700
     timescaledb: false
+    maxOpenConns: 4
+    maxIdleConns: 2

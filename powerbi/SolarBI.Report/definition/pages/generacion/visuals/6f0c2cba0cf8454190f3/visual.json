@@ -150,6 +150,20 @@
                       "Entity": "FactEnergia"
                     }
                   },
+                  "Property": "Cobertura solar %"
+                }
+              },
+              "queryRef": "FactEnergia.Cobertura solar %",
+              "nativeQueryRef": "Cobertura solar %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
                   "Property": "Días incompletos"
                 }
               },

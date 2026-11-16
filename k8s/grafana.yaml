@@ -30,9 +30,17 @@ spec:
             - {name: GF_USERS_ALLOW_SIGN_UP, value: 'false'}
             - {name: GF_AUTH_ANONYMOUS_ENABLED, value: 'false'}
             - {name: GF_ANALYTICS_REPORTING_ENABLED, value: 'false'}
+            - {name: GF_PLUGINS_PREINSTALL_SYNC, value: 'grafana-postgresql-datasource@13.0.7'}
+            - {name: GF_PLUGINS_PREINSTALL_AUTO_UPDATE, value: 'false'}
+            - name: GF_PLUGINS_DISABLE_PLUGINS
+              value: grafana-lokiexplore-app,grafana-pyroscope-app,grafana-exploretraces-app,grafana-metricsdrilldown-app,elasticsearch,prometheus,tempo,zipkin,opentsdb,stackdriver,mssql,jaeger,loki,mysql,influxdb,grafana-advisor-app,grafana-pyroscope-datasource
           resources:
-            requests: {cpu: 100m, memory: 128Mi}
-            limits: {cpu: '1', memory: 384Mi}
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {cpu: '1', memory: 768Mi}
+          startupProbe:
+            httpGet: {path: /api/health, port: 3000}
+            periodSeconds: 5
+            failureThreshold: 180
           readinessProbe:
             httpGet: {path: /api/health, port: 3000}
             initialDelaySeconds: 10

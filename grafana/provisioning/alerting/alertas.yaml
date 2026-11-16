@@ -30,7 +30,7 @@ groups:
         format: table
         rawSql: SELECT u.soc-p.soc_umbral AS value,u.inversor::text AS inversor FROM
           demo.ultima u CROSS JOIN gold.parametros p WHERE u.emitido>now()-interval
-          '45 seconds'
+          '${STALE_SECONDS} seconds'
         editorMode: code
     - refId: C
       relativeTimeRange:

@@ -4,9 +4,9 @@
   "position": {
     "x": 800,
     "y": 350,
-    "width": 770,
-    "height": 225,
     "z": 120,
+    "height": 225,
+    "width": 770,
     "tabOrder": 120
   },
   "visual": {
@@ -27,25 +27,8 @@
                 }
               },
               "queryRef": "DimFecha.fecha",
-              "nativeQueryRef": "fecha"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "FactEnergia"
-                    }
-                  },
-                  "Property": "Solar kWh"
-                }
-              },
-              "queryRef": "FactEnergia.Solar kWh",
-              "nativeQueryRef": "Solar kWh"
+              "nativeQueryRef": "fecha",
+              "active": true
             }
           ]
         },
@@ -64,6 +47,24 @@
               },
               "queryRef": "DimInversor.nombre",
               "nativeQueryRef": "nombre"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Solar kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Solar kWh",
+              "nativeQueryRef": "Solar kWh"
             }
           ]
         }

@@ -1,0 +1,126 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 592.23703966679523,
+            "y": -50
+          },
+          "nodeIndex": "DimFecha",
+          "nodeLineageTag": "003e08d0-875b-4687-98aa-f413570d3240",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 854.00605642225025,
+            "y": 301.18405767425742
+          },
+          "nodeIndex": "DimFranja",
+          "nodeLineageTag": "2d82f919-86af-4184-a294-0f0996e7cac5",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 226.13345242887169,
+            "y": 617.74723817383688
+          },
+          "nodeIndex": "DimInversor",
+          "nodeLineageTag": "789d380c-9f09-49c6-9541-1b53e002bad8",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 305.02119064992456,
+            "y": 82.637685304751813
+          },
+          "nodeIndex": "DimTipoEvento",
+          "nodeLineageTag": "9cc956ab-589d-4957-93c4-0799527fcdfc",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1088.0060564222504,
+            "y": 340.97673394966631
+          },
+          "nodeIndex": "EscenarioTarifa",
+          "nodeLineageTag": "ed623970-98db-46a7-84e9-dbdacfe3b8c1",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 669.51790294711225,
+            "y": 531.95346789933262
+          },
+          "nodeIndex": "FactEnergia",
+          "nodeLineageTag": "b65ff15d-ee88-46b2-bba3-ea7041570c8f",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 265.8709196337424
+          },
+          "nodeIndex": "FactEventos",
+          "nodeLineageTag": "0daeed4e-abeb-4628-88eb-85396672f670",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1372.0060564222504,
+            "y": 340.97673394966631
+          },
+          "nodeIndex": "Parametros",
+          "nodeLineageTag": "7f650c0d-4176-4c52-b48c-78889ee0a2f4",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

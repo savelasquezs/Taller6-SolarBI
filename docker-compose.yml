@@ -19,7 +19,9 @@ services:
     mem_limit: 1g
     cpus: 2
   etl:
-    build: .
+    build:
+      context: .
+      provenance: false
     image: solarbi-app:1.0
     env_file: .env
     environment:
@@ -43,6 +45,9 @@ services:
       GF_USERS_ALLOW_SIGN_UP: 'false'
       GF_AUTH_ANONYMOUS_ENABLED: 'false'
       GF_ANALYTICS_REPORTING_ENABLED: 'false'
+      GF_PLUGINS_PREINSTALL_SYNC: grafana-postgresql-datasource@13.0.7
+      GF_PLUGINS_PREINSTALL_AUTO_UPDATE: 'false'
+      GF_PLUGINS_DISABLE_PLUGINS: grafana-lokiexplore-app,grafana-pyroscope-app,grafana-exploretraces-app,grafana-metricsdrilldown-app,elasticsearch,prometheus,tempo,zipkin,opentsdb,stackdriver,mssql,jaeger,loki,mysql,influxdb,grafana-advisor-app,grafana-pyroscope-datasource
       BI_PASSWORD: ${BI_PASSWORD}
       SOC_ALERT_SECONDS: ${SOC_ALERT_SECONDS:-30}
       STALE_SECONDS: ${STALE_SECONDS:-45}
@@ -51,11 +56,12 @@ services:
     volumes:
       - ${DATA_DIR}/persistencia/compose-grafana:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ${DATA_DIR}/configuracion/alertas.yaml:/etc/grafana/provisioning/alerting/alertas.yaml:ro
       - ./grafana/tablero.json:/var/lib/grafana/dashboards/solarbi.json:ro
     depends_on:
       etl:
         condition: service_completed_successfully
-    mem_limit: 384m
+    mem_limit: 768m
     cpus: 1
   simulador:
     image: solarbi-app:1.0

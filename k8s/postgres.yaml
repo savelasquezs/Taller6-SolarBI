@@ -27,6 +27,11 @@ spec:
           resources:
             requests: {cpu: 100m, memory: 256Mi}
             limits: {cpu: '2', memory: 1Gi}
+          startupProbe:
+            exec:
+              command: [pg_isready, -U, solarbi, -d, solarbi]
+            periodSeconds: 5
+            failureThreshold: 120
           readinessProbe:
             exec:
               command: [pg_isready, -U, solarbi, -d, solarbi]

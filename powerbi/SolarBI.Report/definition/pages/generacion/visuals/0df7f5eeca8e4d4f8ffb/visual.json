@@ -4,9 +4,9 @@
   "position": {
     "x": 415,
     "y": 85,
-    "width": 365,
-    "height": 95,
     "z": 20,
+    "height": 95,
+    "width": 365,
     "tabOrder": 20
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimFecha.anio",
-              "nativeQueryRef": "anio"
+              "nativeQueryRef": "anio",
+              "active": true
             }
           ]
         }

@@ -1,16 +1,101 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "3a68187d395b442cb101",
   "position": {
     "x": 30,
     "y": 595,
-    "width": 1540,
-    "height": 220,
     "z": 110,
+    "height": 220,
+    "width": 1540,
     "tabOrder": 110
   },
   "visual": {
     "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFecha"
+                    }
+                  },
+                  "Property": "anio"
+                }
+              },
+              "queryRef": "DimFecha.anio",
+              "nativeQueryRef": "anio",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFecha"
+                    }
+                  },
+                  "Property": "periodo"
+                }
+              },
+              "queryRef": "DimFecha.periodo",
+              "nativeQueryRef": "periodo",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFecha"
+                    }
+                  },
+                  "Property": "fecha"
+                }
+              },
+              "queryRef": "DimFecha.fecha",
+              "nativeQueryRef": "fecha",
+              "active": false
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Solar kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Solar kWh",
+              "nativeQueryRef": "Solar kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Solar mes anterior"
+                }
+              },
+              "queryRef": "FactEnergia.Solar mes anterior",
+              "nativeQueryRef": "Solar mes anterior"
+            }
+          ]
+        }
+      }
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -81,88 +166,6 @@
           }
         }
       ]
-    },
-    "query": {
-      "queryState": {
-        "Rows": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimFecha"
-                    }
-                  },
-                  "Property": "anio"
-                }
-              },
-              "queryRef": "DimFecha.anio",
-              "nativeQueryRef": "anio"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimFecha"
-                    }
-                  },
-                  "Property": "periodo"
-                }
-              },
-              "queryRef": "DimFecha.periodo",
-              "nativeQueryRef": "periodo"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimFecha"
-                    }
-                  },
-                  "Property": "fecha"
-                }
-              },
-              "queryRef": "DimFecha.fecha",
-              "nativeQueryRef": "fecha"
-            }
-          ]
-        },
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "FactEnergia"
-                    }
-                  },
-                  "Property": "Solar kWh"
-                }
-              },
-              "queryRef": "FactEnergia.Solar kWh",
-              "nativeQueryRef": "Solar kWh"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "FactEnergia"
-                    }
-                  },
-                  "Property": "Solar mes anterior"
-                }
-              },
-              "queryRef": "FactEnergia.Solar mes anterior",
-              "nativeQueryRef": "Solar mes anterior"
-            }
-          ]
-        }
-      }
     }
   }
 }

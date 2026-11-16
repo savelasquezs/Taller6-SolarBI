@@ -1,77 +1,144 @@
 {
   "compatibilityLevel": 1606,
   "model": {
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"DimFecha\", \"DimInversor\", \"DimFranja\", \"DimTipoEvento\", \"FactEnergia\", \"FactEventos\", \"Parametros\"]"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
     "culture": "es-ES",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
     "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "relationships": [
+      {
+        "name": "66ca028d-fc1e-4500-bec3-cdddf62e7616",
+        "fromColumn": "fecha_id",
+        "fromTable": "FactEnergia",
+        "toColumn": "fecha_id",
+        "toTable": "DimFecha"
+      },
+      {
+        "name": "be8c717f-256c-465d-bd36-b1b57cf6c817",
+        "fromColumn": "inversor",
+        "fromTable": "FactEnergia",
+        "toColumn": "inversor",
+        "toTable": "DimInversor"
+      },
+      {
+        "name": "855f645b-b46f-4a46-8157-f06253294449",
+        "fromColumn": "franja_id",
+        "fromTable": "FactEnergia",
+        "toColumn": "franja_id",
+        "toTable": "DimFranja"
+      },
+      {
+        "name": "b6a7995f-da3b-4cd1-9803-914bcdf85768",
+        "fromColumn": "fecha_id",
+        "fromTable": "FactEventos",
+        "toColumn": "fecha_id",
+        "toTable": "DimFecha"
+      },
+      {
+        "name": "e50e7b25-84b8-4fef-b300-9e993820dc3f",
+        "fromColumn": "inversor",
+        "fromTable": "FactEventos",
+        "toColumn": "inversor",
+        "toTable": "DimInversor"
+      },
+      {
+        "name": "a23601d0-b7b7-4429-809e-5910bd227129",
+        "fromColumn": "franja_id",
+        "fromTable": "FactEventos",
+        "toColumn": "franja_id",
+        "toTable": "DimFranja"
+      },
+      {
+        "name": "92becf42-f39c-42e7-93d6-1e3b0498c0ff",
+        "fromColumn": "tipo",
+        "fromTable": "FactEventos",
+        "toColumn": "tipo",
+        "toTable": "DimTipoEvento"
+      }
+    ],
+    "sourceQueryCulture": "es-ES",
     "tables": [
       {
         "name": "DimFecha",
-        "lineageTag": "003e08d0-875b-4687-98aa-f413570d3240",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "fecha_id",
             "dataType": "int64",
-            "sourceColumn": "fecha_id",
             "lineageTag": "ae8bef57-42ea-4eea-8f1e-3a35bdaa223c",
+            "sourceColumn": "fecha_id",
             "summarizeBy": "none"
           },
           {
             "name": "fecha",
+            "annotations": [
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
             "dataType": "dateTime",
-            "sourceColumn": "fecha",
-            "lineageTag": "74bd60ba-97c5-45e4-891b-81da14f0cbd3",
-            "summarizeBy": "none",
             "formatString": "yyyy-MM-dd",
-            "isKey": true
+            "isKey": true,
+            "lineageTag": "74bd60ba-97c5-45e4-891b-81da14f0cbd3",
+            "sourceColumn": "fecha",
+            "summarizeBy": "none"
           },
           {
             "name": "anio",
             "dataType": "int64",
-            "sourceColumn": "anio",
             "lineageTag": "22f06613-7b1f-427b-b125-cad1b453dc7c",
+            "sourceColumn": "anio",
             "summarizeBy": "none"
           },
           {
             "name": "mes",
             "dataType": "int64",
-            "sourceColumn": "mes",
             "lineageTag": "3e023cbe-f146-4591-99d2-4e9307bd5129",
+            "sourceColumn": "mes",
             "summarizeBy": "none"
           },
           {
             "name": "periodo",
             "dataType": "string",
-            "sourceColumn": "periodo",
             "lineageTag": "3d8d7d4f-1ecf-4f1e-af77-fbf2b0cae08e",
+            "sourceColumn": "periodo",
             "summarizeBy": "none"
           },
           {
             "name": "dia",
             "dataType": "int64",
-            "sourceColumn": "dia",
             "lineageTag": "47b21969-1821-4b57-b062-7e6de55b3f00",
+            "sourceColumn": "dia",
             "summarizeBy": "none"
           },
           {
             "name": "dia_semana",
             "dataType": "int64",
-            "sourceColumn": "dia_semana",
             "lineageTag": "7360a06c-6440-4bd4-898c-0cfbf635b66d",
+            "sourceColumn": "dia_semana",
             "summarizeBy": "none"
-          }
-        ],
-        "partitions": [
-          {
-            "name": "DimFecha",
-            "mode": "import",
-            "source": {
-              "type": "m",
-              "expression": [
-                "let",
-                "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.dim_fecha\")",
-                "in Fuente"
-              ]
-            }
           }
         ],
         "dataCategory": "Time",
@@ -81,333 +148,362 @@
             "levels": [
               {
                 "name": "Año",
-                "ordinal": 0,
-                "column": "anio"
+                "column": "anio",
+                "lineageTag": "eb3dab5d-dd18-4f7f-b088-48efbea32ddc",
+                "ordinal": 0
               },
               {
                 "name": "Mes",
-                "ordinal": 1,
-                "column": "periodo"
+                "column": "periodo",
+                "lineageTag": "460c6e10-18c4-4ae0-a010-a301255d6668",
+                "ordinal": 1
               },
               {
                 "name": "Día",
-                "ordinal": 2,
-                "column": "fecha"
+                "column": "fecha",
+                "lineageTag": "2e310483-4df4-47a9-ac57-bfd57d726796",
+                "ordinal": 2
               }
-            ]
+            ],
+            "lineageTag": "89db06f0-07fc-4313-8725-b9ac54003f5f"
+          }
+        ],
+        "lineageTag": "003e08d0-875b-4687-98aa-f413570d3240",
+        "partitions": [
+          {
+            "name": "DimFecha",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.dim_fecha\")",
+                "in Fuente"
+              ],
+              "type": "m"
+            }
           }
         ]
       },
       {
         "name": "DimInversor",
-        "lineageTag": "789d380c-9f09-49c6-9541-1b53e002bad8",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "inversor",
             "dataType": "int64",
-            "sourceColumn": "inversor",
             "lineageTag": "7ffff511-c169-4a0c-acc1-f88438e346dc",
+            "sourceColumn": "inversor",
             "summarizeBy": "none"
           },
           {
             "name": "nombre",
             "dataType": "string",
-            "sourceColumn": "nombre",
             "lineageTag": "f345de07-8cb2-41f2-80fa-f983d8c4d92e",
+            "sourceColumn": "nombre",
             "summarizeBy": "none"
           },
           {
             "name": "carga",
             "dataType": "string",
-            "sourceColumn": "carga",
             "lineageTag": "be5cdc7d-49d2-4ec0-a540-f9e50738e5b9",
+            "sourceColumn": "carga",
             "summarizeBy": "none"
           },
           {
             "name": "kwp",
             "dataType": "double",
-            "sourceColumn": "kwp",
             "lineageTag": "f653f719-c2c1-468c-987f-1e20607d2645",
+            "sourceColumn": "kwp",
             "summarizeBy": "none"
           },
           {
             "name": "fuente_capacidad",
             "dataType": "string",
-            "sourceColumn": "fuente_capacidad",
             "lineageTag": "f1febf65-75bc-4d2a-93a0-90ef455341f1",
+            "sourceColumn": "fuente_capacidad",
             "summarizeBy": "none"
           }
         ],
+        "lineageTag": "789d380c-9f09-49c6-9541-1b53e002bad8",
         "partitions": [
           {
             "name": "DimInversor",
             "mode": "import",
             "source": {
-              "type": "m",
               "expression": [
                 "let",
                 "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.dim_inversor\")",
                 "in Fuente"
-              ]
+              ],
+              "type": "m"
             }
           }
         ]
       },
       {
         "name": "DimFranja",
-        "lineageTag": "2d82f919-86af-4184-a294-0f0996e7cac5",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "franja_id",
             "dataType": "int64",
-            "sourceColumn": "franja_id",
             "lineageTag": "5b99d7b6-54e7-4419-8af3-bb238943e1db",
+            "sourceColumn": "franja_id",
             "summarizeBy": "none"
           },
           {
             "name": "hora",
             "dataType": "int64",
-            "sourceColumn": "hora",
             "lineageTag": "2bb3a7f2-af6e-40b7-9e64-d3d9d73f0b6d",
+            "sourceColumn": "hora",
             "summarizeBy": "none"
           },
           {
             "name": "minuto",
             "dataType": "int64",
-            "sourceColumn": "minuto",
             "lineageTag": "01b69baa-cb67-4a8e-accb-120bf702ba53",
+            "sourceColumn": "minuto",
             "summarizeBy": "none"
           },
           {
             "name": "franja",
             "dataType": "string",
-            "sourceColumn": "franja",
             "lineageTag": "1fa660dd-62b8-46d8-bc2c-1aa19d6190c1",
+            "sourceColumn": "franja",
             "summarizeBy": "none"
           }
         ],
+        "lineageTag": "2d82f919-86af-4184-a294-0f0996e7cac5",
         "partitions": [
           {
             "name": "DimFranja",
             "mode": "import",
             "source": {
-              "type": "m",
               "expression": [
                 "let",
                 "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.dim_franja\")",
                 "in Fuente"
-              ]
+              ],
+              "type": "m"
             }
           }
         ]
       },
       {
         "name": "DimTipoEvento",
-        "lineageTag": "9cc956ab-589d-4957-93c4-0799527fcdfc",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "tipo",
             "dataType": "string",
-            "sourceColumn": "tipo",
             "lineageTag": "f3c6543a-1f69-4e42-9bd4-0b8ba0b86c0d",
+            "sourceColumn": "tipo",
             "summarizeBy": "none"
           },
           {
             "name": "descripcion",
             "dataType": "string",
-            "sourceColumn": "descripcion",
             "lineageTag": "89b5c2bb-47d1-4c95-8bc2-db80f50d5452",
+            "sourceColumn": "descripcion",
             "summarizeBy": "none"
           }
         ],
+        "lineageTag": "9cc956ab-589d-4957-93c4-0799527fcdfc",
         "partitions": [
           {
             "name": "DimTipoEvento",
             "mode": "import",
             "source": {
-              "type": "m",
               "expression": [
                 "let",
                 "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.dim_tipo_evento\")",
                 "in Fuente"
-              ]
+              ],
+              "type": "m"
             }
           }
         ]
       },
       {
         "name": "FactEnergia",
-        "lineageTag": "b65ff15d-ee88-46b2-bba3-ea7041570c8f",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "ts",
             "dataType": "double",
-            "sourceColumn": "ts",
             "lineageTag": "b15064d9-c222-4e13-84f0-fe564fdb30d9",
+            "sourceColumn": "ts",
             "summarizeBy": "none"
           },
           {
             "name": "inversor",
             "dataType": "int64",
-            "sourceColumn": "inversor",
             "lineageTag": "a213286e-e8cd-4ac6-ae1f-a30d806dba09",
+            "sourceColumn": "inversor",
             "summarizeBy": "none"
           },
           {
             "name": "fecha_id",
             "dataType": "int64",
-            "sourceColumn": "fecha_id",
             "lineageTag": "b11da504-42de-40b1-9028-f626bda57f57",
+            "sourceColumn": "fecha_id",
             "summarizeBy": "none"
           },
           {
             "name": "franja_id",
             "dataType": "int64",
-            "sourceColumn": "franja_id",
             "lineageTag": "5d045a88-5449-4fcc-b548-7965ad656670",
+            "sourceColumn": "franja_id",
             "summarizeBy": "none"
           },
           {
             "name": "solar_kwh",
             "dataType": "double",
-            "sourceColumn": "solar_kwh",
             "lineageTag": "d4313e29-4583-41c3-bd7f-2c229bdfc9fb",
+            "sourceColumn": "solar_kwh",
             "summarizeBy": "none"
           },
           {
             "name": "carga_kwh",
             "dataType": "double",
-            "sourceColumn": "carga_kwh",
             "lineageTag": "604d5f31-36b4-4ea2-ad06-2b8054d15f1a",
+            "sourceColumn": "carga_kwh",
             "summarizeBy": "none"
           },
           {
             "name": "red_importada_kwh",
             "dataType": "double",
-            "sourceColumn": "red_importada_kwh",
             "lineageTag": "9a23ff1d-68a9-4679-b75d-3a5fcdd96304",
+            "sourceColumn": "red_importada_kwh",
             "summarizeBy": "none"
           },
           {
             "name": "red_exportada_kwh",
             "dataType": "double",
-            "sourceColumn": "red_exportada_kwh",
             "lineageTag": "77e60a3e-22dd-41ab-9ca8-99ba48c2e21b",
+            "sourceColumn": "red_exportada_kwh",
             "summarizeBy": "none"
           },
           {
             "name": "bateria_descarga_kwh",
             "dataType": "double",
-            "sourceColumn": "bateria_descarga_kwh",
             "lineageTag": "dc37012d-f40f-4fa4-a0fb-72147089cfd7",
+            "sourceColumn": "bateria_descarga_kwh",
             "summarizeBy": "none"
           },
           {
             "name": "bateria_carga_kwh",
             "dataType": "double",
-            "sourceColumn": "bateria_carga_kwh",
             "lineageTag": "0711b0fa-2bdc-4250-9b8b-6224dbb3576c",
+            "sourceColumn": "bateria_carga_kwh",
             "summarizeBy": "none"
           },
           {
             "name": "residual_kwh",
             "dataType": "double",
-            "sourceColumn": "residual_kwh",
             "lineageTag": "b332b5da-d242-41e6-944e-0554af52eaac",
+            "sourceColumn": "residual_kwh",
             "summarizeBy": "none"
           },
           {
             "name": "registro_s",
             "dataType": "double",
-            "sourceColumn": "registro_s",
             "lineageTag": "a8993046-e1dc-4a3b-ba30-e64e8ed5738d",
+            "sourceColumn": "registro_s",
             "summarizeBy": "none"
           },
           {
             "name": "solar_s",
             "dataType": "double",
-            "sourceColumn": "solar_s",
             "lineageTag": "df7a093f-70c4-4cca-ae28-197abae8af85",
+            "sourceColumn": "solar_s",
             "summarizeBy": "none"
           },
           {
             "name": "carga_s",
             "dataType": "double",
-            "sourceColumn": "carga_s",
             "lineageTag": "3977ff71-3bc2-4b30-93d8-6c82ff12f298",
+            "sourceColumn": "carga_s",
             "summarizeBy": "none"
           },
           {
             "name": "red_s",
             "dataType": "double",
-            "sourceColumn": "red_s",
             "lineageTag": "6db05b77-ed8a-41ff-8411-64c18fbb21fc",
+            "sourceColumn": "red_s",
             "summarizeBy": "none"
           },
           {
             "name": "bateria_s",
             "dataType": "double",
-            "sourceColumn": "bateria_s",
             "lineageTag": "bf87f84f-bd0a-4168-b832-020e5529d54b",
+            "sourceColumn": "bateria_s",
             "summarizeBy": "none"
           },
           {
             "name": "soc_s",
             "dataType": "double",
-            "sourceColumn": "soc_s",
             "lineageTag": "97a10dfd-e9ea-4e11-8b5a-db88e7ccb574",
+            "sourceColumn": "soc_s",
             "summarizeBy": "none"
           },
           {
             "name": "soc_bajo_s",
             "dataType": "double",
-            "sourceColumn": "soc_bajo_s",
             "lineageTag": "eaba4a8e-128e-4058-88d6-831fea0a1648",
+            "sourceColumn": "soc_bajo_s",
             "summarizeBy": "none"
           },
           {
             "name": "balance_s",
             "dataType": "double",
-            "sourceColumn": "balance_s",
             "lineageTag": "287a3d13-9258-4be7-b743-f0db49a6c9d2",
+            "sourceColumn": "balance_s",
             "summarizeBy": "none"
           },
           {
             "name": "soc_integral",
             "dataType": "double",
-            "sourceColumn": "soc_integral",
             "lineageTag": "3aa84ea9-c0c8-45ea-862d-ae237a216627",
+            "sourceColumn": "soc_integral",
             "summarizeBy": "none"
           },
           {
             "name": "lecturas",
             "dataType": "int64",
-            "sourceColumn": "lecturas",
             "lineageTag": "e2920c45-2a61-4b00-9685-48f0ab0dde53",
+            "sourceColumn": "lecturas",
             "summarizeBy": "none"
           },
           {
             "name": "lecturas_validas",
             "dataType": "int64",
-            "sourceColumn": "lecturas_validas",
             "lineageTag": "d956bd31-c259-4bf4-98c6-b91ee59f993f",
+            "sourceColumn": "lecturas_validas",
             "summarizeBy": "none"
           }
         ],
-        "partitions": [
-          {
-            "name": "FactEnergia",
-            "mode": "import",
-            "source": {
-              "type": "m",
-              "expression": [
-                "let",
-                "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.fact_energia\")",
-                "in Fuente"
-              ]
-            }
-          }
-        ],
+        "lineageTag": "b65ff15d-ee88-46b2-bba3-ea7041570c8f",
         "measures": [
           {
             "name": "Solar kWh",
@@ -528,258 +624,218 @@
             "expression": "COUNTROWS(FILTER(SUMMARIZE(FactEnergia,DimFecha[fecha],DimInversor[inversor]),CALCULATE([Disponibilidad %])<0.99))",
             "formatString": "#,0.00",
             "lineageTag": "0d619d98-a328-4ec0-90b9-b1a45672984c"
+          },
+          {
+            "name": "Cobertura solar %",
+            "expression": "DIVIDE(SUM(FactEnergia[solar_s]),COUNTROWS(FactEnergia)*300)",
+            "formatString": "0.0%",
+            "lineageTag": "bc53952e-4b6d-4014-990a-369950da6781"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "FactEnergia",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.fact_energia\")",
+                "in Fuente"
+              ],
+              "type": "m"
+            }
           }
         ]
       },
       {
         "name": "FactEventos",
-        "lineageTag": "0daeed4e-abeb-4628-88eb-85396672f670",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "evento_id",
             "dataType": "string",
-            "sourceColumn": "evento_id",
             "lineageTag": "d0560756-1527-40da-9a95-b7bc8fcbd411",
+            "sourceColumn": "evento_id",
             "summarizeBy": "none"
           },
           {
             "name": "inversor",
             "dataType": "int64",
-            "sourceColumn": "inversor",
             "lineageTag": "e5c91e11-b73b-49b2-bb7d-bb49e1f4290d",
+            "sourceColumn": "inversor",
             "summarizeBy": "none"
           },
           {
             "name": "fecha_id",
             "dataType": "int64",
-            "sourceColumn": "fecha_id",
             "lineageTag": "509fd98d-76ea-48b4-9594-547de5752cfe",
+            "sourceColumn": "fecha_id",
             "summarizeBy": "none"
           },
           {
             "name": "franja_id",
             "dataType": "int64",
-            "sourceColumn": "franja_id",
             "lineageTag": "124f1728-4cd5-4990-b966-1ec4af541172",
+            "sourceColumn": "franja_id",
             "summarizeBy": "none"
           },
           {
             "name": "tipo",
             "dataType": "string",
-            "sourceColumn": "tipo",
             "lineageTag": "8bc6b951-2970-4ace-8f74-b34972846345",
+            "sourceColumn": "tipo",
             "summarizeBy": "none"
           },
           {
             "name": "inicio",
             "dataType": "dateTime",
-            "sourceColumn": "inicio",
+            "formatString": "yyyy-MM-dd HH:mm:ss",
             "lineageTag": "c764c9e9-bbd2-418a-9a9f-5f463bfd8925",
-            "summarizeBy": "none",
-            "formatString": "yyyy-MM-dd HH:mm:ss"
+            "sourceColumn": "inicio",
+            "summarizeBy": "none"
           },
           {
             "name": "fin",
             "dataType": "dateTime",
-            "sourceColumn": "fin",
+            "formatString": "yyyy-MM-dd HH:mm:ss",
             "lineageTag": "3031c119-9f50-45bb-9c71-a356661ab75c",
-            "summarizeBy": "none",
-            "formatString": "yyyy-MM-dd HH:mm:ss"
+            "sourceColumn": "fin",
+            "summarizeBy": "none"
           },
           {
             "name": "fuente",
             "dataType": "string",
-            "sourceColumn": "fuente",
             "lineageTag": "5de6988c-b1ca-438d-b237-0748a2d54fb3",
+            "sourceColumn": "fuente",
             "summarizeBy": "none"
           },
           {
             "name": "descripcion",
             "dataType": "string",
-            "sourceColumn": "descripcion",
             "lineageTag": "1a9a0196-636d-4112-bb4b-bf08446d2ff3",
+            "sourceColumn": "descripcion",
             "summarizeBy": "none"
           }
         ],
+        "lineageTag": "0daeed4e-abeb-4628-88eb-85396672f670",
         "partitions": [
           {
             "name": "FactEventos",
             "mode": "import",
             "source": {
-              "type": "m",
               "expression": [
                 "let",
                 "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.fact_eventos\")",
                 "in Fuente"
-              ]
+              ],
+              "type": "m"
             }
           }
         ]
       },
       {
         "name": "Parametros",
-        "lineageTag": "7f650c0d-4176-4c52-b48c-78889ee0a2f4",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
         "columns": [
           {
             "name": "id",
-            "dataType": "boolean",
-            "sourceColumn": "id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
             "lineageTag": "26766526-33a9-4653-9cd0-5735115bbd3c",
+            "sourceColumn": "id",
             "summarizeBy": "none"
           },
           {
             "name": "tarifa_cop_kwh",
             "dataType": "double",
-            "sourceColumn": "tarifa_cop_kwh",
             "lineageTag": "6ebe08a4-12ed-4399-a4a5-4aaa20e26018",
+            "sourceColumn": "tarifa_cop_kwh",
             "summarizeBy": "none"
           },
           {
             "name": "fuente_tarifa",
             "dataType": "string",
-            "sourceColumn": "fuente_tarifa",
             "lineageTag": "c07fb27d-4142-4bb3-84ab-f1a901aec6a5",
+            "sourceColumn": "fuente_tarifa",
             "summarizeBy": "none"
           },
           {
             "name": "max_gap_s",
             "dataType": "int64",
-            "sourceColumn": "max_gap_s",
             "lineageTag": "b4562a2f-d84e-4948-aeee-8cd8f63ab7ff",
+            "sourceColumn": "max_gap_s",
             "summarizeBy": "none"
           },
           {
             "name": "soc_umbral",
             "dataType": "double",
-            "sourceColumn": "soc_umbral",
             "lineageTag": "9950027f-417b-423c-80d2-b1c9dea9150d",
+            "sourceColumn": "soc_umbral",
             "summarizeBy": "none"
           }
         ],
+        "lineageTag": "7f650c0d-4176-4c52-b48c-78889ee0a2f4",
         "partitions": [
           {
             "name": "Parametros",
             "mode": "import",
             "source": {
-              "type": "m",
               "expression": [
                 "let",
                 "    Fuente = Odbc.Query(\"dsn=SolarBI\", \"SELECT * FROM gold.parametros\")",
                 "in Fuente"
-              ]
+              ],
+              "type": "m"
             }
           }
         ]
       },
       {
         "name": "EscenarioTarifa",
-        "lineageTag": "ed623970-98db-46a7-84e9-dbdacfe3b8c1",
         "columns": [
           {
             "name": "Value",
-            "dataType": "double",
-            "sourceColumn": "[Value]",
-            "formatString": "0%",
-            "lineageTag": "4f1db663-3e6d-43cd-ad94-16520768e988",
             "annotations": [
               {
                 "name": "ParameterMetadata",
                 "value": "{\"version\":0}"
               }
             ],
-            "type": "calculatedTableColumn",
+            "dataType": "double",
+            "formatString": "0%",
+            "isDataTypeInferred": true,
             "isNameInferred": true,
-            "isDataTypeInferred": true
+            "lineageTag": "4f1db663-3e6d-43cd-ad94-16520768e988",
+            "sourceColumn": "[Value]",
+            "type": "calculatedTableColumn"
           }
         ],
+        "lineageTag": "ed623970-98db-46a7-84e9-dbdacfe3b8c1",
         "partitions": [
           {
             "name": "EscenarioTarifa",
             "mode": "import",
             "source": {
-              "type": "calculated",
-              "expression": "GENERATESERIES(-0.5,0.5,0.05)"
+              "expression": "GENERATESERIES(-0.5,0.5,0.05)",
+              "type": "calculated"
             }
           }
         ]
-      }
-    ],
-    "relationships": [
-      {
-        "name": "66ca028d-fc1e-4500-bec3-cdddf62e7616",
-        "fromTable": "FactEnergia",
-        "fromColumn": "fecha_id",
-        "toTable": "DimFecha",
-        "toColumn": "fecha_id",
-        "crossFilteringBehavior": "oneDirection",
-        "fromCardinality": "many",
-        "toCardinality": "one"
-      },
-      {
-        "name": "be8c717f-256c-465d-bd36-b1b57cf6c817",
-        "fromTable": "FactEnergia",
-        "fromColumn": "inversor",
-        "toTable": "DimInversor",
-        "toColumn": "inversor",
-        "crossFilteringBehavior": "oneDirection",
-        "fromCardinality": "many",
-        "toCardinality": "one"
-      },
-      {
-        "name": "855f645b-b46f-4a46-8157-f06253294449",
-        "fromTable": "FactEnergia",
-        "fromColumn": "franja_id",
-        "toTable": "DimFranja",
-        "toColumn": "franja_id",
-        "crossFilteringBehavior": "oneDirection",
-        "fromCardinality": "many",
-        "toCardinality": "one"
-      },
-      {
-        "name": "b6a7995f-da3b-4cd1-9803-914bcdf85768",
-        "fromTable": "FactEventos",
-        "fromColumn": "fecha_id",
-        "toTable": "DimFecha",
-        "toColumn": "fecha_id",
-        "crossFilteringBehavior": "oneDirection",
-        "fromCardinality": "many",
-        "toCardinality": "one"
-      },
-      {
-        "name": "e50e7b25-84b8-4fef-b300-9e993820dc3f",
-        "fromTable": "FactEventos",
-        "fromColumn": "inversor",
-        "toTable": "DimInversor",
-        "toColumn": "inversor",
-        "crossFilteringBehavior": "oneDirection",
-        "fromCardinality": "many",
-        "toCardinality": "one"
-      },
-      {
-        "name": "a23601d0-b7b7-4429-809e-5910bd227129",
-        "fromTable": "FactEventos",
-        "fromColumn": "franja_id",
-        "toTable": "DimFranja",
-        "toColumn": "franja_id",
-        "crossFilteringBehavior": "oneDirection",
-        "fromCardinality": "many",
-        "toCardinality": "one"
-      },
-      {
-        "name": "92becf42-f39c-42e7-93d6-1e3b0498c0ff",
-        "fromTable": "FactEventos",
-        "fromColumn": "tipo",
-        "toTable": "DimTipoEvento",
-        "toColumn": "tipo",
-        "crossFilteringBehavior": "oneDirection",
-        "fromCardinality": "many",
-        "toCardinality": "one"
-      }
-    ],
-    "annotations": [
-      {
-        "name": "__PBI_TimeIntelligenceEnabled",
-        "value": "0"
       }
     ]
   }

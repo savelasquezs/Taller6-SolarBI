@@ -1,8 +1,8 @@
-param([ValidateSet('up','down','compose','verificar','cliente')][string]$Accion='up')
+﻿param([ValidateSet('up','down','compose','verificar','cliente')][string]$Accion='up')
 $ErrorActionPreference='Stop'
 Set-Location -LiteralPath $PSScriptRoot
 function Ejecutar {
-    param([string]$Programa,[Parameter(ValueFromRemainingArguments=$true)][string[]]$Argumentos)
+    param([string]$Programa,[string[]]$Argumentos)
     & $Programa @Argumentos
     if($LASTEXITCODE -ne 0) { throw "Falló $Programa (código $LASTEXITCODE)" }
 }
@@ -24,7 +24,9 @@ Ejecutar docker @('info','--format','{{.ServerVersion}}')
 $unidad=$config['DOCKER_STORAGE_DRIVE']
 if(-not $unidad) { $unidad='C' }
 if((Get-PSDrive $unidad).Free -lt 3GB) { throw "Docker necesita al menos 3 GB libres en $unidad`: antes de crear el clúster. No se borrará ningún dato." }
-if((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory*1KB -lt 4GB) { throw 'Se necesitan al menos 4 GB de RAM libre para el clúster y los tableros.' }
+$nodoExistente=docker ps --filter 'name=^/solarbi-control-plane$' --format '{{.Names}}'
+$memoriaMinima=if($nodoExistente) { 1GB } else { 4GB }
+if((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory*1KB -lt $memoriaMinima) { throw 'Falta RAM libre: se requieren 4 GB para crear el clúster o 1 GB para actualizar uno existente.' }
 Ejecutar python @('preparar_datos.py')
 if($Accion -eq 'compose') {
     Ejecutar docker @('compose','up','-d','--build')
@@ -52,8 +54,29 @@ nodes:
 "@ | Set-Content -LiteralPath $kindYaml -Encoding utf8
     Ejecutar $kind @('create','cluster','--name','solarbi','--config',$kindYaml,'--image','kindest/node:v1.34.0@sha256:7416a61b42b1662ca6ca89f02028ac133a309a2a30ba309614e8ec94d976dc5a','--wait','180s')
 }
-Ejecutar docker @('compose','build','etl')
-Ejecutar $kind @('load','docker-image','solarbi-app:1.0','postgres:17.6','grafana/grafana:13.2.3','--name','solarbi')
+Ejecutar docker @('update','--cpus','4','--memory','4g','--memory-swap','5g','solarbi-control-plane')
+Ejecutar docker @('build','--provenance=false','--tag','solarbi-app:1.0','.')
+foreach($imagen in @('postgres:17.6','grafana/grafana:13.2.3')) {
+    $local=docker image ls --filter "reference=$imagen" --format '{{.ID}}'
+    if(-not $local) { Ejecutar docker @('pull',$imagen) }
+}
+$imagenes=@('solarbi-app:1.0','postgres:17.6','grafana/grafana:13.2.3')
+$ids=(docker image inspect @imagenes --format '{{.Id}}') -join '|'
+$archivoImagenes=Join-Path $config.DATA_DIR 'imagenes-amd64.tar'
+$marcaImagenes=Join-Path $config.DATA_DIR 'imagenes-amd64.txt'
+$marcaNodo=Join-Path $config.DATA_DIR 'imagenes-nodo.txt'
+$idNodo=docker inspect solarbi-control-plane --format '{{.Id}}'
+if(-not(Test-Path -LiteralPath $archivoImagenes) -or -not(Test-Path -LiteralPath $marcaImagenes) -or (Get-Content -LiteralPath $marcaImagenes -Raw).Trim() -ne $ids) {
+    Write-Output 'Exportando imágenes linux/amd64 para kind...'
+    Ejecutar docker (@('image','save','--platform','linux/amd64','--output',$archivoImagenes)+$imagenes)
+    $ids | Set-Content -LiteralPath $marcaImagenes -Encoding ascii
+}
+$marca="$idNodo|$ids"
+if(-not(Test-Path -LiteralPath $marcaNodo) -or (Get-Content -LiteralPath $marcaNodo -Raw).Trim() -ne $marca) {
+    Write-Output 'Cargando imágenes en el nodo kind...'
+    Ejecutar $kind @('load','image-archive',$archivoImagenes,'--name','solarbi')
+    $marca | Set-Content -LiteralPath $marcaNodo -Encoding ascii
+}
 Ejecutar kubectl @('--context','kind-solarbi','apply','-f','k8s/namespace.yaml')
 $secretFile=Join-Path $config.DATA_DIR 'credenciales.env'
 $publicFile=Join-Path $config.DATA_DIR 'configuracion.env'
@@ -65,20 +88,26 @@ $publicas | Set-Content -LiteralPath $publicFile -Encoding ascii
 kubectl --context kind-solarbi -n solarbi create secret generic solarbi-credenciales --from-env-file=$secretFile --dry-run=client -o yaml | kubectl --context kind-solarbi apply -f - | Out-Null
 if($LASTEXITCODE -ne 0) { throw 'No se pudo preparar Secret' }
 kubectl --context kind-solarbi -n solarbi create configmap solarbi-config --from-env-file=$publicFile --dry-run=client -o yaml | kubectl --context kind-solarbi apply -f - | Out-Null
-kubectl --context kind-solarbi -n solarbi create configmap solarbi-grafana --from-file=grafana/provisioning/datasources/postgres.yaml --from-file=grafana/provisioning/dashboards/solarbi.yaml --from-file=grafana/provisioning/alerting/alertas.yaml --from-file=grafana/tablero.json --dry-run=client -o yaml | kubectl --context kind-solarbi apply -f - | Out-Null
+if($LASTEXITCODE -ne 0) { throw 'No se pudo preparar ConfigMap de parámetros' }
+$alertFile=Join-Path $config.DATA_DIR 'configuracion/alertas.yaml'
+kubectl --context kind-solarbi -n solarbi create configmap solarbi-grafana --from-file=grafana/provisioning/datasources/postgres.yaml --from-file=grafana/provisioning/dashboards/solarbi.yaml "--from-file=alertas.yaml=$alertFile" --from-file=grafana/tablero.json --dry-run=client -o yaml | kubectl --context kind-solarbi apply -f - | Out-Null
+if($LASTEXITCODE -ne 0) { throw 'No se pudo preparar ConfigMap de Grafana' }
 Ejecutar kubectl @('--context','kind-solarbi','apply','-f','k8s/almacenamiento.yaml','-f','k8s/servicios.yaml','-f','k8s/postgres.yaml')
-Ejecutar kubectl @('--context','kind-solarbi','-n','solarbi','rollout','status','statefulset/postgres','--timeout=180s')
+Ejecutar kubectl @('--context','kind-solarbi','-n','solarbi','rollout','status','statefulset/postgres','--timeout=600s')
 Ejecutar kubectl @('--context','kind-solarbi','-n','solarbi','delete','job','carga-historica','--ignore-not-found=true')
 Ejecutar kubectl @('--context','kind-solarbi','apply','-f','k8s/etl.yaml')
 Ejecutar kubectl @('--context','kind-solarbi','-n','solarbi','wait','--for=condition=complete','job/carga-historica','--timeout=3600s')
 Ejecutar kubectl @('--context','kind-solarbi','apply','-f','k8s/grafana.yaml','-f','k8s/simulador.yaml')
-Ejecutar kubectl @('--context','kind-solarbi','-n','solarbi','rollout','status','deployment/grafana','--timeout=180s')
+Ejecutar kubectl @('--context','kind-solarbi','-n','solarbi','rollout','restart','deployment/grafana','deployment/simulador')
+Ejecutar kubectl @('--context','kind-solarbi','-n','solarbi','rollout','status','deployment/grafana','--timeout=900s')
+Ejecutar kubectl @('--context','kind-solarbi','-n','solarbi','rollout','status','deployment/simulador','--timeout=180s')
 Ejecutar docker @('compose','stop','db','grafana','simulador')
 foreach($par in @(@('db',$config.DB_PORT,'5432'),@('grafana',$config.GRAFANA_PORT,'3000'))) {
     $puerto=[int]$par[1]
     if(-not(Get-NetTCPConnection -State Listen -LocalPort $puerto -ErrorAction SilentlyContinue)) {
         $log=Join-Path $config.OUTPUT_DIR ('port-forward-'+$par[0]+'.log')
-        Start-Process kubectl -WindowStyle Hidden -ArgumentList @('--context','kind-solarbi','-n','solarbi','port-forward',"service/$($par[0])","$($par[1]):$($par[2])",'--address','127.0.0.1') -RedirectStandardOutput $log -RedirectStandardError ($log+'.err')
+        $tunel=Join-Path $PSScriptRoot 'helpers/tunel.ps1'
+        Start-Process powershell -WindowStyle Hidden -ArgumentList @('-NoProfile','-File',"`"$tunel`"",'-Servicio',$par[0],'-PuertoLocal',$par[1],'-PuertoRemoto',$par[2]) -RedirectStandardOutput $log -RedirectStandardError ($log+'.err')
     }
 }
 Ejecutar python @('configurar.py','--dsn')

@@ -27,6 +27,7 @@ def test_carga_real_idempotente_y_json_invalido(tmp_path,monkeypatch):
             db.execute('INSERT INTO statistics VALUES(?,?,?)',(1767196860,inversor,0.02))
         db.execute('INSERT INTO context VALUES(1,1767196800,1767196800,1767196860,?)',('{"source":"prueba","inverter":1}',))
         db.execute('INSERT INTO context VALUES(2,1767196800,1767196800,1767196860,?)',('JSON roto',))
+        db.execute('INSERT INTO analog_measurements SELECT * FROM analog_measurements WHERE inverter=1 LIMIT 1')
     monkeypatch.setenv('DATA_DIR',str(tmp_path))
     monkeypatch.setenv('OUTPUT_DIR',str(tmp_path/'salida'))
     original=sha256(fuente)
@@ -39,4 +40,6 @@ def test_carga_real_idempotente_y_json_invalido(tmp_path,monkeypatch):
     with psycopg.connect(conexion(entorno())) as db:
         assert db.execute('SELECT count(*) FROM silver.contexto').fetchone()[0]==1
     ejecutar()
+    assert totales()==antes and sha256(fuente)==original
+    ejecutar(forzar=True)
     assert totales()==antes and sha256(fuente)==original

@@ -71,7 +71,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "displayName": "Inversor ${__field.name}"
         },
         "overrides": []
       },
@@ -85,7 +86,7 @@
         },
         "colorMode": "value",
         "graphMode": "none",
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "orientation": "auto"
       },
       "targets": [
@@ -99,6 +100,23 @@
           "format": "table",
           "rawQuery": true,
           "editorMode": "code"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "inversor",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "valor",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
         }
       ]
     },
@@ -144,7 +162,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "displayName": "Inversor ${__field.name}"
         },
         "overrides": []
       },
@@ -158,7 +177,7 @@
         },
         "colorMode": "value",
         "graphMode": "none",
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "orientation": "auto"
       },
       "targets": [
@@ -173,11 +192,28 @@
           "rawQuery": true,
           "editorMode": "code"
         }
+      ],
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "inversor",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "valor",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
+        }
       ]
     },
     {
       "id": 4,
-      "title": "Importación actual",
+      "title": "Red actual (signada)",
       "type": "stat",
       "gridPos": {
         "x": 12,
@@ -217,7 +253,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "displayName": "Inversor ${__field.name}"
         },
         "overrides": []
       },
@@ -231,7 +268,7 @@
         },
         "colorMode": "value",
         "graphMode": "none",
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "orientation": "auto"
       },
       "targets": [
@@ -245,6 +282,23 @@
           "format": "table",
           "rawQuery": true,
           "editorMode": "code"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "inversor",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "valor",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
         }
       ]
     },
@@ -290,7 +344,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "displayName": "Inversor ${__field.name}"
         },
         "overrides": []
       },
@@ -304,7 +359,7 @@
         },
         "colorMode": "value",
         "graphMode": "none",
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "orientation": "auto"
       },
       "targets": [
@@ -318,6 +373,23 @@
           "format": "table",
           "rawQuery": true,
           "editorMode": "code"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "rowsToFields",
+          "options": {
+            "mappings": [
+              {
+                "fieldName": "inversor",
+                "handlerKey": "field.name"
+              },
+              {
+                "fieldName": "valor",
+                "handlerKey": "field.value"
+              }
+            ]
+          }
         }
       ]
     },
@@ -943,7 +1015,7 @@
             "type": "grafana-postgresql-datasource",
             "uid": "solarbi-pg"
           },
-          "rawSql": "SELECT inversor::text AS inversor,round(sum(solar_kwh)::numeric,2) AS solar_kwh,round(sum(solar_kwh)::numeric/max(kwp),2) AS kwh_kwp,round(100*sum(registro_s)::numeric/(count(*)*300),2) AS disponibilidad_porcentaje,round(100.0*sum(lecturas_validas)/nullif(sum(lecturas),0),2) AS lecturas_validas_porcentaje FROM gold.energia WHERE inversor IN (${inversor:csv}) GROUP BY inversor ORDER BY inversor",
+          "rawSql": "SELECT inversor::text AS inversor,round(sum(solar_kwh)::numeric,2) AS solar_kwh,round(sum(solar_kwh)::numeric/max(kwp),2) AS kwh_kwp,round(100*sum(registro_s)::numeric/(count(*)*300),2) AS disponibilidad_porcentaje,round(100*sum(solar_s)::numeric/(count(*)*300),2) AS cobertura_solar_porcentaje,round(100.0*sum(lecturas_validas)/nullif(sum(lecturas),0),2) AS lecturas_validas_porcentaje FROM gold.energia WHERE inversor IN (${inversor:csv}) GROUP BY inversor ORDER BY inversor",
           "format": "table",
           "rawQuery": true,
           "editorMode": "code"

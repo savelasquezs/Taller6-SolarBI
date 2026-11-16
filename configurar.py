@@ -18,6 +18,15 @@ def preparar_configuracion():
                    'persistencia/k8s-postgres','persistencia/k8s-grafana','herramientas'):
         (Path(config['DATA_DIR'])/nombre).mkdir(parents=True,exist_ok=True)
     Path(config['OUTPUT_DIR']).mkdir(parents=True,exist_ok=True)
+    alertas=Path(config['DATA_DIR'])/'configuracion/alertas.yaml'
+    alertas.parent.mkdir(parents=True,exist_ok=True)
+    plantilla=(raiz/'grafana/provisioning/alerting/alertas.yaml').read_text(encoding='utf-8')
+    for clave in ('SOC_ALERT_SECONDS','STALE_SECONDS'):
+        valor=int(config[clave])
+        if not 0<valor<=3600:
+            raise ValueError(clave+' debe estar entre 1 y 3600 segundos')
+        plantilla=plantilla.replace('${'+clave+'}',str(valor))
+    alertas.write_text(plantilla,encoding='utf-8')
 
 
 def dsn():

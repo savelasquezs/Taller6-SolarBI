@@ -4,9 +4,9 @@
   "position": {
     "x": 1185,
     "y": 85,
-    "width": 365,
-    "height": 95,
     "z": 40,
+    "height": 95,
+    "width": 365,
     "tabOrder": 40
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimFranja.franja",
-              "nativeQueryRef": "franja"
+              "nativeQueryRef": "franja",
+              "active": true
             }
           ]
         }
