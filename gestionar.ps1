@@ -1,5 +1,7 @@
 ﻿param([ValidateSet('up','down','compose','verificar','cliente')][string]$Accion='up')
 $ErrorActionPreference='Stop'
+$OutputEncoding=[System.Text.UTF8Encoding]::new($false)
+[Console]::OutputEncoding=$OutputEncoding
 Set-Location -LiteralPath $PSScriptRoot
 function Ejecutar {
     param([string]$Programa,[string[]]$Argumentos)
