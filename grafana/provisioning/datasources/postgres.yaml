@@ -1,0 +1,17 @@
+apiVersion: 1
+datasources:
+- name: SolarBI PostgreSQL
+  uid: solarbi-pg
+  type: grafana-postgresql-datasource
+  access: proxy
+  url: db:5432
+  user: solarbi_bi
+  isDefault: true
+  editable: false
+  secureJsonData:
+    password: $BI_PASSWORD
+  jsonData:
+    database: solarbi
+    sslmode: disable
+    postgresVersion: 1700
+    timescaledb: false

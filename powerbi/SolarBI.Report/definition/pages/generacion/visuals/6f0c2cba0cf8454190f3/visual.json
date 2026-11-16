@@ -1,0 +1,164 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "6f0c2cba0cf8454190f3",
+  "position": {
+    "x": 30,
+    "y": 350,
+    "width": 750,
+    "height": 225,
+    "z": 100,
+    "tabOrder": 100
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Comparación de inversores y cobertura'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12304A'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimInversor"
+                    }
+                  },
+                  "Property": "nombre"
+                }
+              },
+              "queryRef": "DimInversor.nombre",
+              "nativeQueryRef": "nombre"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Solar kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Solar kWh",
+              "nativeQueryRef": "Solar kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Rendimiento kWh por kWp"
+                }
+              },
+              "queryRef": "FactEnergia.Rendimiento kWh por kWp",
+              "nativeQueryRef": "Rendimiento kWh por kWp"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Disponibilidad %"
+                }
+              },
+              "queryRef": "FactEnergia.Disponibilidad %",
+              "nativeQueryRef": "Disponibilidad %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Días incompletos"
+                }
+              },
+              "queryRef": "FactEnergia.Días incompletos",
+              "nativeQueryRef": "Días incompletos"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

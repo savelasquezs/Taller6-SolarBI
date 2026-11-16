@@ -1,0 +1,178 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "8c07ff4132d4438c9049",
+  "position": {
+    "x": 30,
+    "y": 575,
+    "width": 1540,
+    "height": 240,
+    "z": 130,
+    "tabOrder": 130
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Calidad y costo por período'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12304A'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFecha"
+                    }
+                  },
+                  "Property": "periodo"
+                }
+              },
+              "queryRef": "DimFecha.periodo",
+              "nativeQueryRef": "periodo"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimInversor"
+                    }
+                  },
+                  "Property": "nombre"
+                }
+              },
+              "queryRef": "DimInversor.nombre",
+              "nativeQueryRef": "nombre"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Lecturas"
+                }
+              },
+              "queryRef": "FactEnergia.Lecturas",
+              "nativeQueryRef": "Lecturas"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Lecturas válidas %"
+                }
+              },
+              "queryRef": "FactEnergia.Lecturas válidas %",
+              "nativeQueryRef": "Lecturas válidas %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Disponibilidad %"
+                }
+              },
+              "queryRef": "FactEnergia.Disponibilidad %",
+              "nativeQueryRef": "Disponibilidad %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Costo importado COP"
+                }
+              },
+              "queryRef": "FactEnergia.Costo importado COP",
+              "nativeQueryRef": "Costo importado COP"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

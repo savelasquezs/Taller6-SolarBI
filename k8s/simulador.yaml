@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulador
+  namespace: solarbi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solarbi-simulador
+  template:
+    metadata:
+      labels:
+        app: solarbi-simulador
+    spec:
+      containers:
+        - name: simulador
+          image: solarbi-app:1.0
+          imagePullPolicy: Never
+          command: [python, simulador.py]
+          envFrom:
+            - configMapRef: {name: solarbi-config}
+          env:
+            - name: SIM_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: solarbi-credenciales, key: SIM_PASSWORD}
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: '0.5', memory: 128Mi}

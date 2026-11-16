@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: solarbi-postgres
+spec:
+  capacity:
+    storage: 8Gi
+  accessModes: [ReadWriteOnce]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: solarbi-local
+  hostPath:
+    path: /datos/persistencia/k8s-postgres
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres
+  namespace: solarbi
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: solarbi-local
+  volumeName: solarbi-postgres
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: solarbi-grafana
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes: [ReadWriteOnce]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: solarbi-local
+  hostPath:
+    path: /datos/persistencia/k8s-grafana
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana
+  namespace: solarbi
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: solarbi-local
+  volumeName: solarbi-grafana
+  resources:
+    requests:
+      storage: 1Gi

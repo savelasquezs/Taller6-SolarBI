@@ -1,0 +1,206 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "9278103245f54df2a3b0",
+  "position": {
+    "x": 30,
+    "y": 350,
+    "width": 1540,
+    "height": 270,
+    "z": 100,
+    "tabOrder": 100
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Flujos energéticos por inversor (DC y AC)'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12304A'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimInversor"
+                    }
+                  },
+                  "Property": "nombre"
+                }
+              },
+              "queryRef": "DimInversor.nombre",
+              "nativeQueryRef": "nombre"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Solar kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Solar kWh",
+              "nativeQueryRef": "Solar kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Red importada kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Red importada kWh",
+              "nativeQueryRef": "Red importada kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Red exportada kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Red exportada kWh",
+              "nativeQueryRef": "Red exportada kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Batería descarga kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Batería descarga kWh",
+              "nativeQueryRef": "Batería descarga kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Batería carga kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Batería carga kWh",
+              "nativeQueryRef": "Batería carga kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Carga kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Carga kWh",
+              "nativeQueryRef": "Carga kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Residual DC AC kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Residual DC AC kWh",
+              "nativeQueryRef": "Residual DC AC kWh"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

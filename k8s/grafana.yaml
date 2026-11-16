@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: solarbi
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: solarbi-grafana
+  template:
+    metadata:
+      labels:
+        app: solarbi-grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:13.2.3
+          env:
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: solarbi-credenciales, key: GRAFANA_PASSWORD}
+            - name: BI_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: solarbi-credenciales, key: BI_PASSWORD}
+            - {name: GF_USERS_ALLOW_SIGN_UP, value: 'false'}
+            - {name: GF_AUTH_ANONYMOUS_ENABLED, value: 'false'}
+            - {name: GF_ANALYTICS_REPORTING_ENABLED, value: 'false'}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: '1', memory: 384Mi}
+          readinessProbe:
+            httpGet: {path: /api/health, port: 3000}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /api/health, port: 3000}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          volumeMounts:
+            - {name: datos, mountPath: /var/lib/grafana}
+            - {name: provisioning, mountPath: /etc/grafana/provisioning/datasources/postgres.yaml, subPath: postgres.yaml}
+            - {name: provisioning, mountPath: /etc/grafana/provisioning/dashboards/solarbi.yaml, subPath: solarbi.yaml}
+            - {name: provisioning, mountPath: /etc/grafana/provisioning/alerting/alertas.yaml, subPath: alertas.yaml}
+            - {name: provisioning, mountPath: /var/lib/grafana/dashboards/solarbi.json, subPath: tablero.json}
+      volumes:
+        - name: datos
+          persistentVolumeClaim: {claimName: grafana}
+        - name: provisioning
+          configMap: {name: solarbi-grafana}

@@ -1,0 +1,73 @@
+name: solarbi
+services:
+  db:
+    image: postgres:17.6
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: solarbi
+      POSTGRES_USER: solarbi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Configure .env}
+    ports:
+      - '127.0.0.1:${DB_PORT:-55441}:5432'
+    volumes:
+      - ${DATA_DIR}/persistencia/compose-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U solarbi -d solarbi']
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    mem_limit: 1g
+    cpus: 2
+  etl:
+    build: .
+    image: solarbi-app:1.0
+    env_file: .env
+    environment:
+      PGHOST: db
+      PGPORT: '5432'
+      DATA_DIR: /datos
+      OUTPUT_DIR: /salida
+    volumes:
+      - ${DATA_DIR}/bronze:/datos/bronze:ro
+      - ${OUTPUT_DIR}:/salida
+    depends_on:
+      db:
+        condition: service_healthy
+    mem_limit: 512m
+    cpus: 2
+  grafana:
+    image: grafana/grafana:13.2.3
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?Configure .env}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_AUTH_ANONYMOUS_ENABLED: 'false'
+      GF_ANALYTICS_REPORTING_ENABLED: 'false'
+      BI_PASSWORD: ${BI_PASSWORD}
+    ports:
+      - '127.0.0.1:${GRAFANA_PORT:-3003}:3000'
+    volumes:
+      - ${DATA_DIR}/persistencia/compose-grafana:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/tablero.json:/var/lib/grafana/dashboards/solarbi.json:ro
+    depends_on:
+      etl:
+        condition: service_completed_successfully
+    mem_limit: 384m
+    cpus: 1
+  simulador:
+    image: solarbi-app:1.0
+    restart: unless-stopped
+    command: ['python', 'simulador.py']
+    environment:
+      PGHOST: db
+      PGPORT: '5432'
+      SIM_PASSWORD: ${SIM_PASSWORD}
+      REPLAY_SECONDS: ${REPLAY_SECONDS:-10}
+      REPLAY_PAUSE_AFTER: ${REPLAY_PAUSE_AFTER:-6}
+      REPLAY_PAUSE_SECONDS: ${REPLAY_PAUSE_SECONDS:-65}
+    depends_on:
+      etl:
+        condition: service_completed_successfully
+    mem_limit: 128m
+    cpus: 0.5

@@ -1,0 +1,150 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "bbc94d8c52234d33907f",
+  "position": {
+    "x": 30,
+    "y": 640,
+    "width": 1540,
+    "height": 175,
+    "z": 110,
+    "tabOrder": 110
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Batería y eventos por día'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12304A'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFecha"
+                    }
+                  },
+                  "Property": "fecha"
+                }
+              },
+              "queryRef": "DimFecha.fecha",
+              "nativeQueryRef": "fecha"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Batería descarga kWh"
+                }
+              },
+              "queryRef": "FactEnergia.Batería descarga kWh",
+              "nativeQueryRef": "Batería descarga kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Tiempo SoC bajo %"
+                }
+              },
+              "queryRef": "FactEnergia.Tiempo SoC bajo %",
+              "nativeQueryRef": "Tiempo SoC bajo %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactEnergia"
+                    }
+                  },
+                  "Property": "Eventos"
+                }
+              },
+              "queryRef": "FactEnergia.Eventos",
+              "nativeQueryRef": "Eventos"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,107 @@
+apiVersion: 1
+groups:
+- orgId: 1
+  name: solarbi
+  folder: SolarBI
+  interval: 10s
+  rules:
+  - uid: soc-bajo
+    title: 'DEMO: SoC bajo'
+    condition: C
+    for: 30s
+    noDataState: OK
+    execErrState: Error
+    annotations:
+      summary: Umbral académico demostrativo; mediciones históricas reproducidas,
+        no telemetría actual.
+    labels:
+      proyecto: solarbi
+    data:
+    - refId: A
+      relativeTimeRange:
+        from: 300
+        to: 0
+      datasourceUid: solarbi-pg
+      model:
+        refId: A
+        datasource:
+          type: grafana-postgresql-datasource
+          uid: solarbi-pg
+        format: table
+        rawSql: SELECT u.soc-p.soc_umbral AS value,u.inversor::text AS inversor FROM
+          demo.ultima u CROSS JOIN gold.parametros p WHERE u.emitido>now()-interval
+          '45 seconds'
+        editorMode: code
+    - refId: C
+      relativeTimeRange:
+        from: 0
+        to: 0
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: threshold
+        expression: A
+        conditions:
+        - evaluator:
+            type: lt
+            params:
+            - 0
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            type: last
+            params: []
+          type: query
+  - uid: sin-lecturas
+    title: 'DEMO: sin lecturas recientes'
+    condition: C
+    for: 0s
+    noDataState: Alerting
+    execErrState: Error
+    annotations:
+      summary: Umbral académico demostrativo; mediciones históricas reproducidas,
+        no telemetría actual.
+    labels:
+      proyecto: solarbi
+    data:
+    - refId: A
+      relativeTimeRange:
+        from: 300
+        to: 0
+      datasourceUid: solarbi-pg
+      model:
+        refId: A
+        datasource:
+          type: grafana-postgresql-datasource
+          uid: solarbi-pg
+        format: table
+        rawSql: SELECT coalesce(extract(epoch FROM now()-u.emitido),999) AS value,i.inversor::text
+          AS inversor FROM gold.dim_inversor i LEFT JOIN demo.ultima u USING(inversor)
+          WHERE i.inversor>0
+        editorMode: code
+    - refId: C
+      relativeTimeRange:
+        from: 0
+        to: 0
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: threshold
+        expression: A
+        conditions:
+        - evaluator:
+            type: gt
+            params:
+            - 45
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            type: last
+            params: []
+          type: query

@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: carga-historica
+  namespace: solarbi
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: etl
+          image: solarbi-app:1.0
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: solarbi-config
+            - secretRef:
+                name: solarbi-credenciales
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: '2', memory: 512Mi}
+          volumeMounts:
+            - name: bronze
+              mountPath: /datos/bronze
+              readOnly: true
+            - name: salida
+              mountPath: /salida
+      volumes:
+        - name: bronze
+          hostPath:
+            path: /datos/bronze
+            type: Directory
+        - name: salida
+          hostPath:
+            path: /entrega
+            type: Directory
