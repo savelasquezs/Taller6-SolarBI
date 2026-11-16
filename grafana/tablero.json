@@ -43,7 +43,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Última potencia solar reproducida por inversor; valores originales en W.",
       "fieldConfig": {
         "defaults": {
           "unit": "watt",
@@ -134,7 +134,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Última potencia activa de carga reproducida por inversor; valores originales en W.",
       "fieldConfig": {
         "defaults": {
           "unit": "watt",
@@ -225,7 +225,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Potencia de red con signo: positivo importa y negativo exporta.",
       "fieldConfig": {
         "defaults": {
           "unit": "watt",
@@ -316,7 +316,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Estado de carga de la batería, de 0 a 100 %; umbral demostrativo de alerta configurable.",
       "fieldConfig": {
         "defaults": {
           "unit": "percent",
@@ -407,7 +407,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Potencia solar histórica reproducida usando la hora actual de emisión.",
       "fieldConfig": {
         "defaults": {
           "unit": "watt",
@@ -476,7 +476,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Potencia activa de carga reproducida usando la hora actual de emisión.",
       "fieldConfig": {
         "defaults": {
           "unit": "watt",
@@ -545,7 +545,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Potencia de red con signo reproducida usando la hora actual de emisión.",
       "fieldConfig": {
         "defaults": {
           "unit": "watt",
@@ -614,7 +614,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "SoC histórico reproducido; no corresponde a una instalación medida en vivo.",
       "fieldConfig": {
         "defaults": {
           "unit": "percent",
@@ -683,7 +683,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Fecha original en China, hora de emisión y antigüedad de la última lectura de cada inversor.",
       "fieldConfig": {
         "defaults": {
           "unit": "none",
@@ -750,7 +750,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Energía solar observada de todo el histórico Gold; sin extrapolar huecos.",
       "fieldConfig": {
         "defaults": {
           "unit": "kwatth",
@@ -823,7 +823,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Energía de carga observada de todo el histórico Gold; sin extrapolar huecos.",
       "fieldConfig": {
         "defaults": {
           "unit": "kwatth",
@@ -896,7 +896,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Energía de red importada observada de todo el histórico Gold; sin extrapolar huecos.",
       "fieldConfig": {
         "defaults": {
           "unit": "kwatth",
@@ -969,11 +969,11 @@
         "type": "grafana-postgresql-datasource",
         "uid": "solarbi-pg"
       },
-      "description": "Regla del Excel: horas menos descansos 16/17. Solo tiempos coherentes; no prueba ausencia de paros sin registrar.",
+      "description": "Rendimiento solar sobre 12,48 kWp por inversor; cobertura de registro y cobertura solar separadas. Histórico completo Gold.",
       "fieldConfig": {
         "defaults": {
           "unit": "none",
-          "decimals": 1,
+          "decimals": 2,
           "color": {
             "mode": "thresholds"
           },
@@ -1015,7 +1015,7 @@
             "type": "grafana-postgresql-datasource",
             "uid": "solarbi-pg"
           },
-          "rawSql": "SELECT inversor::text AS inversor,round(sum(solar_kwh)::numeric,2) AS solar_kwh,round(sum(solar_kwh)::numeric/max(kwp),2) AS kwh_kwp,round(100*sum(registro_s)::numeric/(count(*)*300),2) AS disponibilidad_porcentaje,round(100*sum(solar_s)::numeric/(count(*)*300),2) AS cobertura_solar_porcentaje,round(100.0*sum(lecturas_validas)/nullif(sum(lecturas),0),2) AS lecturas_validas_porcentaje FROM gold.energia WHERE inversor IN (${inversor:csv}) GROUP BY inversor ORDER BY inversor",
+          "rawSql": "WITH resumen AS (SELECT inversor,sum(solar_kwh) AS solar_kwh,sum(registro_s) AS registro_s,sum(solar_s) AS solar_s,count(*) AS intervalos,sum(lecturas_validas) AS validas,sum(lecturas) AS lecturas FROM gold.fact_energia WHERE inversor IN (${inversor:csv}) GROUP BY inversor) SELECT inversor::text AS inversor,round(solar_kwh::numeric,2) AS solar_kwh,round(solar_kwh::numeric/kwp,2) AS kwh_kwp,round(100*registro_s::numeric/(intervalos*300),2) AS disponibilidad_porcentaje,round(100*solar_s::numeric/(intervalos*300),2) AS cobertura_solar_porcentaje,round(100.0*validas/nullif(lecturas,0),2) AS lecturas_validas_porcentaje FROM resumen JOIN gold.dim_inversor USING(inversor) ORDER BY inversor",
           "format": "table",
           "rawQuery": true,
           "editorMode": "code"
