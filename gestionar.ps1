@@ -13,7 +13,13 @@ Get-Content -LiteralPath '.env' | ForEach-Object {
 }
 $kind=Join-Path $config.DATA_DIR 'herramientas/kind.exe'
 if($Accion -eq 'down') {
-    if(Test-Path -LiteralPath $kind) { Ejecutar $kind @('delete','cluster','--name','solarbi') }
+    if(Test-Path -LiteralPath $kind) {
+        $existentes=& $kind get clusters
+        if($existentes -contains 'solarbi') {
+            Ejecutar kubectl @('--context','kind-solarbi','delete','namespace','solarbi','--ignore-not-found=true','--wait=true','--timeout=300s')
+            Ejecutar $kind @('delete','cluster','--name','solarbi')
+        }
+    }
     Ejecutar docker @('compose','down')
     Write-Output 'Servicios retirados. Datos de D: conservados.'
     exit
@@ -107,7 +113,12 @@ foreach($par in @(@('db',$config.DB_PORT,'5432'),@('grafana',$config.GRAFANA_POR
     if(-not(Get-NetTCPConnection -State Listen -LocalPort $puerto -ErrorAction SilentlyContinue)) {
         $log=Join-Path $config.OUTPUT_DIR ('port-forward-'+$par[0]+'.log')
         $tunel=Join-Path $PSScriptRoot 'helpers/tunel.ps1'
-        Start-Process powershell -WindowStyle Hidden -ArgumentList @('-NoProfile','-File',"`"$tunel`"",'-Servicio',$par[0],'-PuertoLocal',$par[1],'-PuertoRemoto',$par[2]) -RedirectStandardOutput $log -RedirectStandardError ($log+'.err')
+        Start-Process powershell -WindowStyle Hidden -ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File',"`"$tunel`"",'-Servicio',$par[0],'-PuertoLocal',$par[1],'-PuertoRemoto',$par[2]) -RedirectStandardOutput $log -RedirectStandardError ($log+'.err')
+    }
+    $limitePuerto=(Get-Date).AddSeconds(30)
+    while(-not(Get-NetTCPConnection -State Listen -LocalPort $puerto -ErrorAction SilentlyContinue)) {
+        if((Get-Date) -gt $limitePuerto) { throw "No se abrió el acceso local al servicio $($par[0]). Revise los logs de port-forward." }
+        Start-Sleep -Seconds 1
     }
 }
 Ejecutar python @('configurar.py','--dsn')
