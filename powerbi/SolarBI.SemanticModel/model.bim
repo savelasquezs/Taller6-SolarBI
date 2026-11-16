@@ -686,7 +686,10 @@
                 "name": "ParameterMetadata",
                 "value": "{\"version\":0}"
               }
-            ]
+            ],
+            "type": "calculatedTableColumn",
+            "isNameInferred": true,
+            "isDataTypeInferred": true
           }
         ],
         "partitions": [
