@@ -65,6 +65,8 @@ def test_no_finitos_soc_y_claves():
     r, errores = limpiar_lectura(fila)
     assert r['solar_w'] is None and r['soc'] is None and len(errores) == 2
     assert limpiar_lectura(fila | {'inverter': 3})[0] is None
+    r, errores = limpiar_lectura(fila | {'pv1power':1000,'battsoc':50,'battvolt':1e308,'battcurr':1e308})
+    assert r['bateria_w'] is None and 'bateria_w_invalido' in errores and not r['valida']
 
 
 def test_contexto_minimiza_datos_personales():

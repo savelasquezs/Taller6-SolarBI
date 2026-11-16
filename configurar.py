@@ -21,6 +21,10 @@ def preparar_configuracion():
     alertas=Path(config['DATA_DIR'])/'configuracion/alertas.yaml'
     alertas.parent.mkdir(parents=True,exist_ok=True)
     plantilla=(raiz/'grafana/provisioning/alerting/alertas.yaml').read_text(encoding='utf-8')
+    umbral=float(config.get('SOC_ALERT_THRESHOLD',20))
+    if not 0<=umbral<=100:
+        raise ValueError('SOC_ALERT_THRESHOLD debe estar entre 0 y 100')
+    plantilla=plantilla.replace('${SOC_ALERT_THRESHOLD}',format(umbral,'.6g'))
     for clave in ('SOC_ALERT_SECONDS','STALE_SECONDS'):
         valor=int(config[clave])
         if not 0<valor<=3600:

@@ -12,7 +12,7 @@ import psycopg
 from psycopg import sql
 from psycopg.types.json import Jsonb
 
-from helpers.calidad import limpiar_lectura, contexto_publicable, numero
+from helpers.calidad import MAX_TS, limpiar_lectura, contexto_publicable, numero, constante_json_invalida
 from helpers.configuracion import conexion, entorno
 from helpers.energia import ENERGIAS, SUMAS, ZONA, acumulador, franja, integrar
 from preparar_datos import sha256
@@ -49,7 +49,7 @@ def inicializar(config):
 def fechas(db, fuente):
     limites=[]
     for tabla,columna in (('analog_measurements','read_ts'),('context','start'),('context','end')):
-        limites.extend(x for x in fuente.execute(f'SELECT min("{columna}"),max("{columna}") FROM "{tabla}"').fetchone() if x is not None)
+        limites.extend(x for x in fuente.execute(f'SELECT min("{columna}"),max("{columna}") FROM "{tabla}" WHERE "{columna}">=0 AND "{columna}"<?',(MAX_TS,)).fetchone() if x is not None)
     desde=datetime.fromtimestamp(min(limites),ZONA).date()
     hasta=datetime.fromtimestamp(max(limites),ZONA).date()
     db.execute("""INSERT INTO gold.dim_fecha SELECT to_char(d,'YYYYMMDD')::INTEGER,d::DATE,
@@ -139,11 +139,11 @@ def cargar_contexto(db, fuente, resumen):
     for fila in fuente.execute('SELECT * FROM context ORDER BY id'):
         resumen['contexto_origen']+=1
         try:
-            valor=json.loads(fila['value'])
+            valor=json.loads(fila['value'],parse_constant=constante_json_invalida)
             if not isinstance(valor,dict):
                 raise ValueError('JSON no objeto')
             tiempos=[numero(fila[c]) for c in ('recorded','start','end')]
-            if any(t is None for t in tiempos) or tiempos[2]<tiempos[1]:
+            if any(t is None or not 0<=t<MAX_TS for t in tiempos) or tiempos[2]<tiempos[1]:
                 raise ValueError('Intervalo inválido')
             fechas_utc=[datetime.fromtimestamp(t,timezone.utc) for t in tiempos]
             valor=contexto_publicable(valor)
@@ -205,7 +205,7 @@ def ejecutar(forzar=False, dias=None):
     salida.mkdir(parents=True,exist_ok=True)
     digest=sha256(bronze)
     reglas=json.dumps({k:config.get(k) for k in ('MAX_GAP_SECONDS','SOC_THRESHOLD','PV_KWP','TARIFF_COP_KWH')},sort_keys=True)
-    huella=hashlib.sha256((digest+reglas+str(dias)+'reglas-v1').encode()).hexdigest()
+    huella=hashlib.sha256((digest+reglas+str(dias)+'reglas-v2').encode()).hexdigest()
     inicializar(config)
     resumen=Counter()
     inicio=time.monotonic()

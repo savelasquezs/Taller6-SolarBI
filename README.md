@@ -56,7 +56,7 @@ Namespace `solarbi`; StatefulSet PostgreSQL y PVC; Deployment Grafana con PVC y 
 
 Grafana refresca cada 5 s. El simulador emite cada 10 s, conserva timestamp original y registra hora de emisión aparte. Tras seis emisiones pausa 65 s para demostrar la alerta de ausencia >45 s. La otra alerta detecta SoC <20 % durante 30 s. Son umbrales académicos; no instrucciones operativas de seguridad. Se aprovisionan al arrancar, sin mensajes externos.
 
-Para cambiar umbrales o intervalos, editar `.env` y los archivos de provisioning correspondientes y repetir el arranque; no se modifica la imagen para cambiar una regla. `sql/02_consultas.sql` incluye agregaciones, ventanas y consulta JSONB nativa. Power BI usa la misma Gold que las tarjetas históricas de Grafana; las series operativas leen el esquema `demo` separado.
+Para cambiar umbrales o intervalos, editar `.env` y repetir el arranque; no se modifica la imagen para cambiar una regla. `SOC_ALERT_THRESHOLD` controla solo la alerta; `SOC_THRESHOLD` define el cálculo histórico y cambiarlo requiere recalcular. `sql/02_consultas.sql` incluye agregaciones, ventanas y consulta JSONB nativa. Power BI usa la misma Gold que las tarjetas históricas de Grafana; las series operativas leen el esquema `demo` separado.
 
 ## Verificación
 

@@ -83,7 +83,7 @@ $publicFile=Join-Path $config.DATA_DIR 'configuracion.env'
 $privadas=@('POSTGRES_PASSWORD','BI_PASSWORD','SIM_PASSWORD','GRAFANA_PASSWORD')
 ($privadas | ForEach-Object { "$_=$($config[$_])" }) | Set-Content -LiteralPath $secretFile -Encoding ascii
 $publicas=@('POSTGRES_DB=solarbi','POSTGRES_USER=solarbi','PGHOST=db','PGPORT=5432','DATA_DIR=/datos','OUTPUT_DIR=/salida')
-foreach($clave in @('MAX_GAP_SECONDS','SOC_THRESHOLD','SOC_ALERT_SECONDS','STALE_SECONDS','REPLAY_SECONDS','REPLAY_PAUSE_AFTER','REPLAY_PAUSE_SECONDS','TARIFF_COP_KWH','PV_KWP')) { $publicas+="$clave=$($config[$clave])" }
+foreach($clave in @('MAX_GAP_SECONDS','SOC_THRESHOLD','SOC_ALERT_THRESHOLD','SOC_ALERT_SECONDS','STALE_SECONDS','REPLAY_SECONDS','REPLAY_PAUSE_AFTER','REPLAY_PAUSE_SECONDS','TARIFF_COP_KWH','PV_KWP')) { $publicas+="$clave=$($config[$clave])" }
 $publicas | Set-Content -LiteralPath $publicFile -Encoding ascii
 kubectl --context kind-solarbi -n solarbi create secret generic solarbi-credenciales --from-env-file=$secretFile --dry-run=client -o yaml | kubectl --context kind-solarbi apply -f - | Out-Null
 if($LASTEXITCODE -ne 0) { throw 'No se pudo preparar Secret' }

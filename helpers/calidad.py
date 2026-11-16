@@ -3,6 +3,11 @@ import re
 
 CAMPOS = {'pv1power': 'solar_w', 'outw_a': 'carga_w', 'gridpowerw_a': 'red_w',
           'battvolt': 'bateria_v', 'battcurr': 'bateria_a', 'battsoc': 'soc'}
+MAX_TS = 4102444800
+
+
+def constante_json_invalida(valor):
+    raise ValueError('Constante JSON no finita: '+valor)
 
 
 def numero(valor):
@@ -15,7 +20,7 @@ def numero(valor):
 
 def limpiar_lectura(fila):
     ts = numero(fila['read_ts'])
-    if ts is None or not 0 <= ts < 4102444800 or fila['inverter'] not in (1, 2):
+    if ts is None or not 0 <= ts < MAX_TS or fila['inverter'] not in (1, 2):
         return None, ['clave_invalida']
     lectura = {'ts': ts, 'inversor': fila['inverter']}
     errores = []
@@ -28,7 +33,9 @@ def limpiar_lectura(fila):
             errores.append(nombre + '_invalido')
         lectura[nombre] = valor
     v, a = lectura['bateria_v'], lectura['bateria_a']
-    lectura['bateria_w'] = v * a if v is not None and a is not None else None
+    lectura['bateria_w'] = numero(v * a) if v is not None and a is not None else None
+    if v is not None and a is not None and lectura['bateria_w'] is None:
+        errores.append('bateria_w_invalido')
     lectura['valida'] = not errores
     lectura['errores'] = errores
     return lectura, errores
